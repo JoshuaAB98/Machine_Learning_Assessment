@@ -4,33 +4,19 @@ import os
 
 root = tk.Tk()
 
-def calcBmi():
+variable = tk.StringVar(root)
+variable.set("1 Day")
+w = tk.OptionMenu(root, variable, '1 Day', '2 Days', '3 Days', '4 Days', '5 Days', '6 Days', '1 Week', '2 Weeks', '3 Weeks', '1 Month', '1 Year')
+
+
+def func():
 
     try:
-        w = float(entryW.get())
-        h = float(entryH.get())
+        print("Congrats")
     except:
-        label3.config(text='Incorrect Inputs')
-        label4.config(text='')
+        print("fail")
 
-    try:
-        bmi = (w/h/h)*10000
-        label3.config(text='Your BMI is:')
-        label4.config(text=round(bmi, 2))
-    except:
-        print("No values to perform operation!")
-        bmi = -1
 
-    if(bmi>29 and bmi<40):
-        label5.config(text="Your BMI is in the overweight range.")
-    elif(bmi<18.5 and bmi > 0):
-        label5.config(text="Your BMI is in the underweight range.")
-    elif(bmi>39.9):
-        label5.config(text="You are morbidly obese!")
-    elif (bmi < 0):
-        label5.config(text=" ")
-    else:
-        label5.config(text="Your BMI is in the healthy range.")
 
 canvas = tk.Canvas(root, height=1000, width=1900, bg="white")
 canvas.pack()
@@ -38,30 +24,30 @@ canvas.pack()
 # frame = tk.Canvas(root, bg="white")
 # frame.place(relwidth=0.8, relheight=0.8, relx=0.1, rely=0.1)
 
-entryH = tk.Entry (root)
-canvas.create_window(300, 40, window=entryH)
+entryP = tk.Entry (root)
+canvas.create_window(420, 40, window=entryP)
 
-entryW = tk.Entry (root)
-canvas.create_window(300, 100, window=entryW)
+entryT = tk.OptionMenu(root, variable, '1 Day', '2 Days', '3 Days', '4 Days', '5 Days', '6 Days', '1 Week', '2 Weeks', '3 Weeks', '1 Month', '1 Year')
+canvas.create_window(420, 100, window=entryT)
 
-labelH = tk.Label(root, text='Enter your height (cm)', bg="white")
-labelH.config(font=('helvetica', 14))
-canvas.create_window(100, 40, window=labelH)
+labelP = tk.Label(root, text='Enter the amount of desired profit (£): ', bg="white")
+labelP.config(font=('helvetica', 14))
+canvas.create_window(180, 40, window=labelP)
 
-labelW = tk.Label(root, text='Enter your weight (kg)', bg="white")
-labelW.config(font=('helvetica', 14))
-canvas.create_window(100, 100, window=labelW)
+labelT = tk.Label(root, text='Enter the desired wait time: ', bg="white")
+labelT.config(font=('helvetica', 14))
+canvas.create_window(140, 100, window=labelT)
 
 label3 = tk.Label(root, text='Your BMI is:', font=('helvetica', 10), bg="white")
-canvas.create_window(200, 170, window=label3)
+canvas.create_window(220, 170, window=label3)
 
 label4 = tk.Label(root, font=('helvetica', 10), bg="white")
-canvas.create_window(200, 190, window=label4)
+canvas.create_window(220, 190, window=label4)
 
 label5 = tk.Label(root, font=('helvetica', 10), bg="white")
-canvas.create_window(200, 210, window=label5)
+canvas.create_window(220, 210, window=label5)
 
-calc = tk.Button(root, text="Calculate!", padx=10, pady=5, fg="white", bg="#263D42", command=calcBmi)
+calc = tk.Button(root, text="Calculate!", padx=10, pady=5, fg="white", bg="#263D42", command=func())
 calc.pack()
 
 root.mainloop()
