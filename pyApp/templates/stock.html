@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+
+<ul class="horizontal">
+    <li><a class="active" href="stock">Home</a></li>
+    <li><a href="profit">Profit</a></li>
+</ul>
+
+<h1>Choose a Stock to View</h1>
+
+<form action="/history" method="post">
+    <label for="stock">Choose a stock:</label>
+    <select id="stock" name="stock" size="1">
+        <option value="AAPL">Apple</option>
+        <option value="ADBE">Adobe</option>
+        <option value="AMD">AMD</option>
+        <option value="AMZN">Amazon</option>
+        <option value="DBX">Dropbox</option>
+        <option value="DIS">Discord</option>
+        <option value="FB">Facebook</option>
+        <option value="GOOG">Google</option>
+        <option value="INTC">Intel</option>
+        <option value="KO">Coca Cola</option>
+        <option value="MSFT">Microsoft</option>
+        <option value="NFLX">Netflix</option>
+        <option value="NKE">Nike</option>
+        <option value="NOK">Nokia</option>
+        <option value="NVDA">Nvidia</option>
+        <option value="PEP">Pepsi</option>
+        <option value="SONO">Sonos</option>
+        <option value="SPOT">Spotify</option>
+        <option value="TSLA">Tesla</option>
+        <option value="ZM">Zoom</option>
+    </select><br><br>
+    <label for="stock">Choose a time period:</label>
+    <select id="per" name="stock" size="1">
+        <option value="day">Day</option>
+        <option value="week">Week</option>
+        <option value="month">Month</option>
+        <option value="quarter">Quarter</option>
+    </select><br><br>
+    <button class="button" style="vertical-align:middle"><span>Submit </span></button>
+</form>
+{% endblock %}
