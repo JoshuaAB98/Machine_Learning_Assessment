@@ -1,5 +1,6 @@
 import pandas_datareader as web
 import matplotlib.pyplot as plt
+from arimamodel import getDataframe, getPredGraph, trainModel, getPred, getCSVS
 from datetime import datetime
 import re
 import json
@@ -66,4 +67,4 @@ def createHistoricalGraph(stockIn):
     plt.savefig('static/images/plot.png')
 
 def predictGraph(stockIn, perIn):
-    return "Hello"
+    getPredGraph(perIn, stockIn)

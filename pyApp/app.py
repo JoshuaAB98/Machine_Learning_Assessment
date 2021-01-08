@@ -33,6 +33,8 @@ def history():
         print(stock, file=sys.stderr)
         createHistoricalGraph(stock)
         return render_template('history.html')
+    else:
+        return render_template('history.html')
 
 @app.route("/profit", methods=['POST', 'GET'])
 def profit():
