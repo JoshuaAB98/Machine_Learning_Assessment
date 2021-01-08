@@ -25,4 +25,37 @@
     <button class="button" style="vertical-align:middle"><span>Submit </span></button>
 </form>
 
+<br><br><br><br>
+<h2>Stocks That Achieve the Requested Profit</h2>
+<table>
+    <tr>
+        <th>Stock Name</th>
+        <th>Profit</th>
+    </tr>
+    {% for key, value in aboveProfit.items() %}
+    <tr>
+        <td>{{ key }}</td>
+        <td>{{ "$"+"{:.2f}".format(value) }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br><br><br><br>
+<h2>Stocks That Did Not Achieve the Requested Profit</h2>
+<table>
+    <tr>
+        <th>Stock Name</th>
+        <th>Profit</th>
+    </tr>
+    {% for key, value in belowProfit.items() %}
+    <tr>
+        <td>{{ key }}</td>
+        <td>{{ "$"+"{:.2f}".format(value) }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
+
 {% endblock %}

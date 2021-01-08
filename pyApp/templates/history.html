@@ -7,11 +7,11 @@
 {% block body %}
 
 <ul class="horizontal">
-    <li><a href="stock">Home</a></li>
+    <li><a class="active" href="stock">Home</a></li>
     <li><a href="profit">Profit</a></li>
 </ul>
 
-<h1>Historical View</h1>
+<h1>Stock Analysis</h1>
 
 <form action="/history" method="post">
     <label for="stock">Choose a stock:</label>
@@ -38,16 +38,23 @@
         <option value="ZM">Zoom</option>
     </select><br><br>
     <label for="stock">Choose a time period:</label>
-    <select id="per" name="stock" size="1">
-        <option value="day">Day</option>
-        <option value="week">Week</option>
-        <option value="month">Month</option>
-        <option value="quarter">Quarter</option>
+    <select id="per" name="per" size="1">
+        <option value=1>Day</option>
+        <option value=7>Week</option>
+        <option value=30>Month</option>
+        <option value=90>Quarter</option>
     </select><br><br>
     <button class="button" style="vertical-align:middle"><span>Submit </span></button>
 </form>
-
+<br><br><br><br>
+<h3>Predicted Close Price Value</h3>
+<div id="graphDivProf">
+    <img src="/static/images/predGraph.png">
+</div>
+<br><br><br><br>
+<h2>Close Prices From the Last Year</h2>
 <div id="graphDiv">
     <img src="/static/images/plot.png">
 </div>
+
 {% endblock %}

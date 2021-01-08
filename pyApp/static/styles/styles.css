@@ -35,7 +35,7 @@ ul.horizontal li a.active {
 .button {
   display: inline-block;
   border-radius: 4px;
-  background-color: steelblue;
+  background-color: #4CAF50;
   border: none;
   color: #FFFFFF;
   text-align: center;
@@ -75,4 +75,25 @@ ul.horizontal li a.active {
 
 #graphDiv {
     margin-top: 50px;
+}
+
+#graphDivProf {
+    margin-top: 50px;
+}
+
+img{
+    width: 1000px;
+}
+
+footer {
+  margin-top: 300px;,
+  text-align: center;
+  padding: 3px;
+  background-color: #4CAF50;
+  color: white;
+}
+
+table {
+    width: auto;
+    text-align: center;
 }

@@ -1,5 +1,5 @@
 import sys
-from functions import createHistoricalGraph, getCSVS
+from functions import createHistoricalGraph, getCSVS, predictGraph, calcProfit
 from flask import Flask, render_template, url_for, request, redirect
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -19,18 +19,20 @@ def home():
         stock = request.form['stock']
         per = request.form['per']
         timeperiod = request.args.get('timeperiod')
-        return redirect(url_for('stock_calc', stock=stock, per=timeperiod))
+        return render_template('stock.html')
     else:
-        getCSVS()
         return render_template('stock.html')
 
 @app.route("/history", methods=['POST', 'GET'])
 
 def history():
     if request.method == 'POST':
+        getCSVS()
         stock = request.form['stock']
-        # per = request.form['per']
+        per = request.form['per']
         print(stock, file=sys.stderr)
+        print(per, file=sys.stderr)
+        predictGraph(stock, per)
         createHistoricalGraph(stock)
         return render_template('history.html')
     else:
@@ -38,7 +40,46 @@ def history():
 
 @app.route("/profit", methods=['POST', 'GET'])
 def profit():
-    return render_template('profit.html')
+
+    if request.method == 'POST':
+        profit = request.form['profit']
+        period = request.form['per']
+        aboveProfit = {}
+        belowProfit = {}
+        aboveProfit, belowProfit = calcProfit(profit, period)
+
+        aboveKeys = []
+        aboveVals = []
+        belowKeys = []
+        belowVals = []
+
+        print(type(aboveProfit), file=sys.stderr)
+        print(type(belowProfit), file=sys.stderr)
+        print(aboveProfit, file=sys.stderr)
+        print(belowProfit, file=sys.stderr)
+
+        # for key, value in aboveProfit.items():
+        #     aboveKeys.append(key)
+        #     aboveVals.append(value)
+        #
+        # for key, value in belowProfit.items():
+        #     belowKeys.append(key)
+        #     belowVals.append(value)
+
+        print("Above Keys")
+        print(aboveKeys, file=sys.stderr)
+        print("Above Values")
+        print(aboveVals, file=sys.stderr)
+        print("Below Keys")
+        print(belowKeys, file=sys.stderr)
+        print("Below Values")
+        print(belowVals, file=sys.stderr)
+
+        # return render_template('profitshow.html', aboveKeys=aboveKeys, aboveVals=aboveVals
+        #                        , belowKeys=belowKeys, belowVals=belowVals)
+        return render_template('profitshow.html', aboveProfit=aboveProfit, belowProfit=belowProfit)
+    else:
+        return render_template('profit.html')
 
 @app.after_request
 def add_header(r):

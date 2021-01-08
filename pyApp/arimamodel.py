@@ -50,7 +50,7 @@ def getCSVS():
     params = {
         'start' : now,
         'interval' : '1d',
-        'range' : '5y',
+        'range' : '1y',
         'events' : 'history'
     }
 
@@ -68,7 +68,6 @@ def getCSVS():
             for row in reader:
                 # writer.writerow({'Date': datetime_to_float(datetime.strptime(row['Date'], "%Y-%m-%d")), 'Open': row['Open'], 'High': row['High'], 'Low': row['Low'], 'Close': row['Close'], 'Adj Close': row['Adj Close'], 'Volume': row['Volume']})
                 writer.writerow({'Date': row['Date'], 'Open': row['Open'], 'High': row['High'], 'Low': row['Low'], 'Close': row['Close'], 'Adj Close': row['Adj Close'], 'Volume': row['Volume']})
-
 
 def ad_test(dataset):
     dftest = adfuller(dataset, autolag= 'AIC')
@@ -103,8 +102,8 @@ def trainModel(stockName):
     ad_test(stock_df['Close'])
 
     #Stepwise to minimse aic value
-    stepwise_fit = auto_arima(stock_df, trace=True, suppress_warnings=True)
-    print(stepwise_fit.summary())
+    # stepwise_fit = auto_arima(stock_df, trace=True, suppress_warnings=True)
+    # print(stepwise_fit.summary())
 
     y_train, y_test = train_test_split(stock_df, test_size=0.2)
     print(y_train.shape)
@@ -135,15 +134,17 @@ def trainModel(stockName):
 
     return model2
 
-def getPred(numDays, model, stock_df):
+def getPred(numDays, stock_df, stockIn):
+    model = trainModel(stockIn)
+    n = int(numDays)
     currentDate = datetime.datetime.now()
-    predDate = currentDate + datetime.timedelta(days=numDays)
+    predDate = currentDate + datetime.timedelta(days=n)
     print(predDate.strftime('%Y-%m-%d'))
 
     index_future_dates=pd.date_range(start=currentDate,end=predDate)
     print(index_future_dates)
 
-    pred=model.predict(start=len(stock_df),end=len(stock_df)+numDays,typ='levels').rename('Prediction')
+    pred=model.predict(start=len(stock_df), end=len(stock_df)+n, typ='levels').rename('Prediction')
     pred.index=index_future_dates.strftime('%Y-%m-%d')
     print("------------------------ Pred Info ------------------------")
     print(pred)
@@ -151,13 +152,12 @@ def getPred(numDays, model, stock_df):
     return pred
 
 def getPredGraph(days, stockIn):
-    n = days
+    n = int(days)
     stock_df = getDataframe(stockIn)
-    model = trainModel("MSFT")
-    pred = getPred(n, model, stock_df)
+    pred = getPred(n, stock_df, stockIn)
 
     plt.figure(figsize=(25,17))
-    plt.title(stockIn+' Closing Price History')
+    plt.title(stockIn+' Closing Price Prediction in '+str(days)+' Days')
     plt.plot(pred)
     plt.xlabel('Date', fontsize=18)
     plt.xticks(rotation=90)
@@ -166,4 +166,32 @@ def getPredGraph(days, stockIn):
 
     return plt
 
-getPredGraph(7, "SPOT")
+def getProfits(periodIn):
+    profits = {}
+    period = int(periodIn)
+    yest = datetime.datetime.today() - relativedelta(days=1)
+    yest = yest.strftime('%Y-%m-%d')
+    lastClose = 0
+
+    for c in companies:
+        df = web.DataReader(c, data_source='yahoo', start=yest, end=yest)
+        lastClose = df['Close'][df.index[0]]
+        pred = getPred(period, getDataframe(c), c)
+        predClose = pred[period]
+        profits[c]=lastClose-predClose
+
+        print("Prediction")
+        print(pred[period])
+        print("Last Close ")
+        print(lastClose)
+        print("Predicted Close ")
+        print(predClose)
+
+    print(profits)
+    return profits
+
+
+print("--------------------------------TESTING--------------------------------")
+
+# getProfits(30)
+

@@ -1,6 +1,9 @@
+from collections import OrderedDict
+from operator import itemgetter
+
 import pandas_datareader as web
 import matplotlib.pyplot as plt
-from arimamodel import getDataframe, getPredGraph, trainModel, getPred, getCSVS
+from arimamodel import getDataframe, getPredGraph, trainModel, getPred, getCSVS, getProfits
 from datetime import datetime
 import re
 import json
@@ -24,7 +27,7 @@ def getCSVS():
     start = script_data.find("context")-2
     json_data = json.loads(script_data[start:-12])
 
-    now = datetime.datetime.today().strftime('%Y-%m-%d')
+    now = datetime.today().strftime('%Y-%m-%d')
 
     #Historical Stock Data
     stock_url = 'https://query1.finance.yahoo.com/v7/finance/download/{}?'
@@ -68,3 +71,38 @@ def createHistoricalGraph(stockIn):
 
 def predictGraph(stockIn, perIn):
     getPredGraph(perIn, stockIn)
+
+def calcProfit(profitMargin, period):
+    profits = getProfits(period)
+    aboveProfit = {}
+    sortedAbove = {}
+
+    belowProfit = {}
+    sortedBelow = {}
+
+    for c in companies:
+        if profits[c] >= int(profitMargin):
+            aboveProfit[c] = profits[c]
+        else:
+            belowProfit[c] = profits[c]
+
+    # sortedAbove = sorted(aboveProfit.items(), key=lambda kv: kv[1], reverse=True)
+    # sortedBelow = sorted(belowProfit.items(), key=lambda kv: kv[1], reverse=True)
+
+    sortedAbove = OrderedDict(sorted(aboveProfit.items(), key=itemgetter(1), reverse=True))
+    sortedBelow = OrderedDict(sorted(belowProfit.items(), key=itemgetter(1), reverse=True))
+
+    print("Above Profit")
+    print(aboveProfit)
+    print(type(aboveProfit))
+    print("Sorted Above Profit")
+    print(type(sortedAbove))
+    print(sortedAbove)
+    print("Below Profit")
+    print(belowProfit)
+    print(type(belowProfit))
+    print("Sorted Below Profit")
+    print(type(sortedBelow))
+    print(sortedBelow)
+
+    return sortedAbove, sortedBelow
