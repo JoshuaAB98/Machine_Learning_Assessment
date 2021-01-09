@@ -15,7 +15,8 @@
 
 <form action="/history" method="post">
     <label for="stock">Choose a stock:</label>
-    <select id="stock" name="stock" size="1">
+    <select id="stock" name="stock" size="1" required>
+        <option selected disabled>Choose a stock</option>
         <option value="AAPL">Apple</option>
         <option value="ADBE">Adobe</option>
         <option value="AMD">AMD</option>
@@ -38,7 +39,8 @@
         <option value="ZM">Zoom</option>
     </select><br><br>
     <label for="stock">Choose a time period:</label>
-    <select id="per" name="per" size="1">
+    <select id="per" name="per" size="1" required>
+        <option selected disabled>Choose a time period</option>
         <option value=1>Day</option>
         <option value=7>Week</option>
         <option value=30>Month</option>
@@ -47,7 +49,7 @@
     <button class="button" style="vertical-align:middle"><span>Submit </span></button>
 </form>
 <br><br><br><br>
-<h3>Predicted Close Price Value</h3>
+<h2>Predicted Close Price Value</h2>
 <div id="graphDivProf">
     <img src="/static/images/predGraph.png">
 </div>

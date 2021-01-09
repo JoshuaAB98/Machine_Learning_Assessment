@@ -159,7 +159,6 @@ def getPred(numDays, stock_df, stockIn):
 
     return pred
 
-
 def getPredGraph(days, stockIn):
     n = int(days)
     stock_df = getDataframe(stockIn)
@@ -175,7 +174,6 @@ def getPredGraph(days, stockIn):
 
     return plt
 
-
 def getProfits(periodIn):
     profits = {}
     period = int(periodIn)
@@ -188,7 +186,7 @@ def getProfits(periodIn):
         lastClose = df['Close'][df.index[0]]
         pred = getPred(period, getDataframe(c), c)
         predClose = pred[period]
-        profits[c] = lastClose - predClose
+        profits[c] = predClose - lastClose
 
         print("Prediction")
         print(pred[period])

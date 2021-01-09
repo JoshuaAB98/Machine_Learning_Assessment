@@ -3,7 +3,7 @@ from operator import itemgetter
 
 import pandas_datareader as web
 import matplotlib.pyplot as plt
-from arimamodel import getDataframe, getPredGraph, trainModel, getPred, getCSVS, getProfits
+from arimamodel import getPredGraph, getProfits
 from datetime import datetime
 import re
 import json
