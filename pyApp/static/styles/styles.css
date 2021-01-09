@@ -1,9 +1,13 @@
-body{
-    margin: 0;
+html, body{
+    height: 100%;
     font-family: sans-serif;
     text-align: center;
 }
 
+body{
+    display: flex;
+    flex-direction: column;
+}
 ul.horizontal {
     list-style-type: none;
     margin: 0;
@@ -93,7 +97,33 @@ footer {
   color: white;
 }
 
-table {
-    width: auto;
-    text-align: center;
+.stocks {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.stocks td, .stocks th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.stocks tr:nth-child(even){background-color: #f2f2f2;}
+
+.stocks tr:hover {background-color: #ddd;}
+
+.stocks th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.content{
+    flex: 1 0 auto;
+}
+
+.footer{
+    flex-shrink: 0;
 }

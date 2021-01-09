@@ -4,13 +4,16 @@ from flask import Flask, render_template, url_for, request, redirect
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import matplotlib.pyplot as plt
+
 plt.style.use('fivethirtyeight')
 import pandas_datareader as web
 
-companies = ['AAPL', 'ADBE', 'AMD', 'AMZN', 'DBX', 'DIS', 'FB', 'GOOG', 'INTC', 'KO', 'MSFT', 'NFLX', 'NKE', 'NOK', 'NVDA', 'PEP', 'SONO', 'SPOT', 'TSLA', 'ZM']
+companies = ['AAPL', 'ADBE', 'AMD', 'AMZN', 'DBX', 'DIS', 'FB', 'GOOG', 'INTC', 'KO', 'MSFT', 'NFLX', 'NKE', 'NOK',
+             'NVDA', 'PEP', 'SONO', 'SPOT', 'TSLA', 'ZM']
 
 app = Flask(__name__)
 app.config["CACHE_TYPE"] = "null"
+
 
 @app.route('/stock', methods=['POST', 'GET'])
 @app.route("/", methods=['POST', 'GET'])
@@ -23,8 +26,8 @@ def home():
     else:
         return render_template('stock.html')
 
-@app.route("/history", methods=['POST', 'GET'])
 
+@app.route("/history", methods=['POST', 'GET'])
 def history():
     if request.method == 'POST':
         getCSVS()
@@ -38,9 +41,9 @@ def history():
     else:
         return render_template('history.html')
 
+
 @app.route("/profit", methods=['POST', 'GET'])
 def profit():
-
     if request.method == 'POST':
         profit = request.form['profit']
         period = request.form['per']
@@ -58,14 +61,6 @@ def profit():
         print(aboveProfit, file=sys.stderr)
         print(belowProfit, file=sys.stderr)
 
-        # for key, value in aboveProfit.items():
-        #     aboveKeys.append(key)
-        #     aboveVals.append(value)
-        #
-        # for key, value in belowProfit.items():
-        #     belowKeys.append(key)
-        #     belowVals.append(value)
-
         print("Above Keys")
         print(aboveKeys, file=sys.stderr)
         print("Above Values")
@@ -81,6 +76,7 @@ def profit():
     else:
         return render_template('profit.html')
 
+
 @app.after_request
 def add_header(r):
     """
@@ -92,6 +88,7 @@ def add_header(r):
     r.headers["Expires"] = "0"
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
+
 
 if __name__ == "__main__":
     app.run(debug=True)
