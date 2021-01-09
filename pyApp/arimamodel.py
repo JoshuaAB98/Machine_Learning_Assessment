@@ -9,6 +9,8 @@ import csv
 from io import StringIO
 from bs4 import BeautifulSoup
 import requests
+# from pandas import set_option
+# from pandas.plotting import scatter_matrix
 from sklearn.model_selection import train_test_split
 from statsmodels.tsa.stattools import adfuller
 from pmdarima import auto_arima
@@ -70,7 +72,6 @@ def getCSVS():
 
             writer.writeheader()
             for row in reader:
-                # writer.writerow({'Date': datetime_to_float(datetime.strptime(row['Date'], "%Y-%m-%d")), 'Open': row['Open'], 'High': row['High'], 'Low': row['Low'], 'Close': row['Close'], 'Adj Close': row['Adj Close'], 'Volume': row['Volume']})
                 writer.writerow({'Date': row['Date'], 'Open': row['Open'], 'High': row['High'], 'Low': row['Low'],
                                  'Close': row['Close'], 'Adj Close': row['Adj Close'], 'Volume': row['Volume']})
 
@@ -141,7 +142,6 @@ def trainModel(stockName):
 
     return model2
 
-
 def getPred(numDays, stock_df, stockIn):
     model = trainModel(stockIn)
     n = int(numDays)
@@ -180,25 +180,136 @@ def getProfits(periodIn):
     yest = datetime.datetime.today() - relativedelta(days=1)
     yest = yest.strftime('%Y-%m-%d')
     lastClose = 0
+    lastStock = "TSLA"
 
     for c in companies:
+        lastStock = c
         df = web.DataReader(c, data_source='yahoo', start=yest, end=yest)
         lastClose = df['Close'][df.index[0]]
         pred = getPred(period, getDataframe(c), c)
         predClose = pred[period]
         profits[c] = predClose - lastClose
 
-        print("Prediction")
-        print(pred[period])
-        print("Last Close ")
-        print(lastClose)
-        print("Predicted Close ")
-        print(predClose)
-
-    print(profits)
+    print("----------- getProfits Function -----------")
+    print("--- Stock Name ---")
+    print(lastStock)
+    print("--- Pred ---")
+    print(pred)
+    print("--- lastClose ---")
+    print(lastClose)
+    print("--- predClose-lastClose ---")
+    print(predClose-lastClose)
+    print("--- profits TSLA ---")
+    print(profits["TSLA"])
     return profits
 
 
 print("--------------------------------TESTING--------------------------------")
 
 # getProfits(30)
+
+
+# def histogram():
+#     stock = "MSFT"
+#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+#
+#     missing_data = stock_df[stock_df.isna().any(axis=1)]
+#     # print(missing_data)
+#
+#     pd.set_option('display.width', 1000)
+#     stock_df.hist()
+#     print("----- Length of Data frame -----")
+#     print(len(stock_df))
+#     plt.show()
+#
+# def densityPlot():
+#     stock = "MSFT"
+#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+#
+#     missing_data = stock_df[stock_df.isna().any(axis=1)]
+#     # print(missing_data)
+#
+#     pd.set_option('display.width', 1000)
+#     stock_df.plot(kind='density', subplots=True, layout=(3, 3), sharex=False)
+#     plt.show()
+#
+# def multiVariate():
+#     stock = "MSFT"
+#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+#
+#     missing_data = stock_df[stock_df.isna().any(axis=1)]
+#     # print(missing_data)
+#
+#     pd.set_option('display.width', 1000)
+#
+#     data_correlations = stock_df.corr()
+#
+#     corr_fig = plt.figure()
+#     axises = corr_fig.add_subplot(111)
+#     axcorr = axises.matshow(data_correlations, vmin=-1, vmax=1)
+#
+#     corr_fig.colorbar(axcorr)
+#     ticks = np.arange(0,6,1)
+#
+#     axises.set_xticks(ticks)
+#     axises.set_yticks(ticks)
+#     axises.set_xticklabels(header_names)
+#     axises.set_yticklabels(header_names)
+#
+#     plt.show()
+#
+# def scatterMatrix():
+#     stock = "MSFT"
+#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+#
+#     missing_data = stock_df[stock_df.isna().any(axis=1)]
+#     # print(missing_data)
+#
+#     pd.set_option('display.width', 1000)
+#
+#     print(header_names, stock_df)
+#
+#     set_option('display.width', 500)
+#     set_option('precision', 4)
+#
+#     scatter_matrix(stock_df)
+#     plt.show()
+#
+# def whiskerBox():
+#     stock = "MSFT"
+#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+#
+#     missing_data = stock_df[stock_df.isna().any(axis=1)]
+#     # print(missing_data)
+#
+#     pd.set_option('display.width', 1000)
+#
+#     stock_df.plot(kind='box', subplots=True, layout=(2,6), sharex = False)
+#     plt.show()
+#
+# def averages():
+#     stock = "MSFT"
+#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+#
+#     missing_data = stock_df[stock_df.isna().any(axis=1)]
+#     # print(missing_data)
+#
+#     # print(stock_df.mean())
+#     # print(stock_df.median())
+#     print(stock_df.describe())
+#
+#     print(stock_df.corr(method='pearson'))
+
+# getCSVS()
+# histogram()
+# densityPlot()
+# multiVariate()
+# scatterMatrix()
+# whiskerBox()
+# averages()

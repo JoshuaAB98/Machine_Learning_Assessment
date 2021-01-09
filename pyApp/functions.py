@@ -87,14 +87,27 @@ def calcProfit(profitMargin, period):
     belowProfit = {}
     sortedBelow = {}
 
-    for c in companies:
-        if profits[c] >= int(profitMargin):
-            aboveProfit[c] = profits[c]
-        else:
-            belowProfit[c] = profits[c]
+    print("----------- functions.py -----------")
 
-    # sortedAbove = sorted(aboveProfit.items(), key=lambda kv: kv[1], reverse=True)
-    # sortedBelow = sorted(belowProfit.items(), key=lambda kv: kv[1], reverse=True)
+    print("\nAll Profits \n")
+    print(profits)
+
+    for c in companies:
+        print("Profits[c][0]")
+        print(profits[c][0])
+        print("\nProfits[c][1]")
+        print(profits[c][1])
+        print("\nProfits[c]")
+        print(profits[c])
+        print("\nProfit Margin")
+        print(profitMargin)
+        if profits[c][1] >= int(profitMargin):
+            aboveProfit[c] = profits[c][0]
+            # aboveProfit[c][1] = profits[c][1]
+        else:
+            belowProfit[c] = profits[c][0]
+            print("\nBelow Profit")
+            print(belowProfit[c])
 
     sortedAbove = OrderedDict(sorted(aboveProfit.items(), key=itemgetter(1), reverse=True))
     sortedBelow = OrderedDict(sorted(belowProfit.items(), key=itemgetter(1), reverse=True))

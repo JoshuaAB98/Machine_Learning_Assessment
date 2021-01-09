@@ -13,7 +13,7 @@ ul.horizontal {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: grey;
 }
 
 ul.horizontal li {
@@ -29,17 +29,17 @@ ul.horizontal li a {
 }
 
 ul.horizontal li a:hover:not(.active) {
-    background-color: #000;
+    background-color: darkgrey;
 }
 
 ul.horizontal li a.active {
-    background-color:#4CAF50;
+    background-color:#aaf0d1;
 }
 
 .button {
   display: inline-block;
   border-radius: 4px;
-  background-color: #4CAF50;
+  background-color: #aaf0d1;
   border: none;
   color: #FFFFFF;
   text-align: center;
@@ -95,7 +95,7 @@ footer {
   margin-top: 300px;,
   text-align: center;
   padding: 3px;
-  background-color: #4CAF50;
+  background-color: #aaf0d1;
   color: white;
 }
 
@@ -118,7 +118,7 @@ footer {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #4CAF50;
+  background-color: #aaf0d1;
   color: white;
 }
 
