@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 from statsmodels.tsa.stattools import adfuller
 from pmdarima import auto_arima
 import matplotlib.pyplot as plt
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from math import sqrt
 from statsmodels.tsa.arima_model import ARIMA
 from dateutil.relativedelta import relativedelta
@@ -108,8 +108,8 @@ def getDataframe(stockIn):
     print(stock_df)
 
     return stock_df
-getCSVS()
-getDataframe("TSLA")
+# getCSVS()
+# getDataframe("TSLA")
 def trainModel(stockName):
     stock_df = getDataframe(stockName)
     ad_test(stock_df['Close'])
@@ -134,17 +134,27 @@ def trainModel(stockName):
     print(pred)
 
     # Dataset Mean
+    print("Test dataset mean")
     print(y_test['Close'].mean())
-    rmse = sqrt(mean_squared_error(pred, y_test['Close']))
-    print(rmse)
 
-    # print(pred)
+    # Dataset evaluation
+    print("Mean Absolute Error")
+    print("{:.2f}".format(mean_absolute_error(y_test, pred)))
+    print("Mean Squeared error")
+    print("{:.2f}".format(mean_squared_error(y_test, pred)))
+    print("RMSE: ")
+    print(sqrt(mean_squared_error(pred, y_test['Close'])))
+    print(("R2 Score: "))
+    print(r2_score(y_test, pred))
 
+    # Train model 2
     model2 = ARIMA(stock_df['Close'], order=(3, 1, 3))
     model2 = model2.fit()
     print(stock_df.tail())
 
     return model2
+
+# trainModel("TSLA")
 
 def getPred(numDays, stock_df, stockIn):
     model = trainModel(stockIn)
