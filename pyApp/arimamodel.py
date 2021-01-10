@@ -91,26 +91,30 @@ def getDataframe(stockIn):
     # Read data
 
     stock_df = pd.read_csv('csvs/' + stockIn + ".csv", index_col='Date', parse_dates=True)
-    print(stock_df.shape)
-    print(stock_df.head())
+    # print(stock_df.shape)
+    # print(stock_df.head())
 
     missing_data = stock_df[stock_df.isna().any(axis=1)]
     print(missing_data)
+
+    if len(missing_data) > 0:
+        missing_data = stock_df.dropna(how='all', axis=1)
 
     print(stock_df)
     stock_df = stock_df.drop(['Open', 'High', 'Low', 'Adj Close', 'Volume'], axis=1)
     print(stock_df)
 
     stock_df = stock_df.applymap(np.float)
+    print(stock_df)
 
     return stock_df
-
-
+getCSVS()
+getDataframe("TSLA")
 def trainModel(stockName):
     stock_df = getDataframe(stockName)
     ad_test(stock_df['Close'])
 
-    # Stepwise to minimse aic value
+    # Stepwise to minimse aic value leave when using the website
     # stepwise_fit = auto_arima(stock_df, trace=True, suppress_warnings=True)
     # print(stepwise_fit.summary())
 
