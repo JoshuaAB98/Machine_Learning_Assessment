@@ -16,7 +16,7 @@
 <form action="/history" method="post">
     <label for="stock">Choose a stock:</label>
     <select id="stock" name="stock" size="1" required>
-        <option selected disabled>Choose a stock</option>
+        <option selected disabled value="">Choose a stock</option>
         <option value="AAPL">Apple</option>
         <option value="ADBE">Adobe</option>
         <option value="AMD">AMD</option>
@@ -40,7 +40,7 @@
     </select><br><br>
     <label for="stock">Choose a time period:</label>
     <select id="per" name="per" size="1" required>
-        <option selected disabled>Choose a time period</option>
+        <option selected disabled value="">Choose a time period</option>
         <option value=1>Day</option>
         <option value=7>Week</option>
         <option value=30>Month</option>

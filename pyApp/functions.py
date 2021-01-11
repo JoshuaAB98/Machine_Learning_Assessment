@@ -119,7 +119,6 @@ def calcProfit(profitMargin, period):
                 print("\nBelow Profit")
                 print(belowProfit[c])
 
-
     sortedAbove = OrderedDict(sorted(aboveProfit.items(), key=itemgetter(1), reverse=True))
     sortedBelow = OrderedDict(sorted(belowProfit.items(), key=itemgetter(1), reverse=True))
 

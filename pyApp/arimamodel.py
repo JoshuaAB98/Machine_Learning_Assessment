@@ -75,6 +75,7 @@ def getCSVS():
                 writer.writerow({'Date': row['Date'], 'Open': row['Open'], 'High': row['High'], 'Low': row['Low'],
                                  'Close': row['Close'], 'Adj Close': row['Adj Close'], 'Volume': row['Volume']})
 
+    return True
 
 def ad_test(dataset):
     dftest = adfuller(dataset, autolag='AIC')
@@ -108,13 +109,15 @@ def getDataframe(stockIn):
     print(stock_df)
 
     return stock_df
+
 # getCSVS()
-# getDataframe("TSLA")
+getDataframe("TSLA")
+
 def trainModel(stockName):
     stock_df = getDataframe(stockName)
     ad_test(stock_df['Close'])
 
-    # Stepwise to minimse aic value leave when using the website
+    # Stepwise to minimse aic value leave off when using the website
     # stepwise_fit = auto_arima(stock_df, trace=True, suppress_warnings=True)
     # print(stepwise_fit.summary())
 
@@ -154,7 +157,7 @@ def trainModel(stockName):
 
     return model2
 
-# trainModel("TSLA")
+# trainModel("MSFT")
 
 def getPred(numDays, stock_df, stockIn):
     model = trainModel(stockIn)
@@ -186,19 +189,46 @@ def getPredGraph(days, stockIn):
     plt.ylabel('Close Price USD ($)', fontsize=18)
     plt.savefig('static/images/predGraph.png')
 
-    return plt
+    return True
 
 def getProfits(periodIn):
     profits = {}
     period = int(periodIn)
     yest = datetime.datetime.today() - relativedelta(days=1)
     yest = yest.strftime('%Y-%m-%d')
+    yest1 = datetime.datetime.today() - relativedelta(days=2)
+    yest1 = yest1.strftime('%Y-%m-%d')
+    yest2 = datetime.datetime.today() - relativedelta(days=3)
+    yest2 = yest2.strftime('%Y-%m-%d')
+    yest3 = datetime.datetime.today() - relativedelta(days=4)
+    yest3 = yest3.strftime('%Y-%m-%d')
+    df=0
     lastClose = 0
     lastStock = "TSLA"
 
     for c in companies:
         lastStock = c
-        df = web.DataReader(c, data_source='yahoo', start=yest, end=yest)
+        if isinstance(df, pd.DataFrame) == False:
+            try:
+                df = web.DataReader(c, data_source='yahoo', start=yest, end=yest)
+            except:
+                pass
+        if isinstance(df, pd.DataFrame) == False:
+            try:
+                df = web.DataReader(c, data_source='yahoo', start=yest1, end=yest1)
+            except:
+                pass
+        if isinstance(df, pd.DataFrame) == False:
+            try:
+                df = web.DataReader(c, data_source='yahoo', start=yest2, end=yest2)
+            except:
+                pass
+        if isinstance(df, pd.DataFrame) == False:
+            try:
+                df = web.DataReader(c, data_source='yahoo', start=yest3, end=yest3)
+            except:
+                pass
+
         lastClose = df['Close'][df.index[0]]
         pred = getPred(period, getDataframe(c), c)
         predClose = pred[period]
@@ -229,7 +259,7 @@ print("--------------------------------TESTING--------------------------------")
 #     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
 #
 #     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     # print(missing_data)
+#     print(missing_data)
 #
 #     pd.set_option('display.width', 1000)
 #     stock_df.hist()
@@ -243,7 +273,7 @@ print("--------------------------------TESTING--------------------------------")
 #     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
 #
 #     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     # print(missing_data)
+#     print(missing_data)
 #
 #     pd.set_option('display.width', 1000)
 #     stock_df.plot(kind='density', subplots=True, layout=(3, 3), sharex=False)
@@ -255,7 +285,7 @@ print("--------------------------------TESTING--------------------------------")
 #     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
 #
 #     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     # print(missing_data)
+#     print(missing_data)
 #
 #     pd.set_option('display.width', 1000)
 #
@@ -281,7 +311,7 @@ print("--------------------------------TESTING--------------------------------")
 #     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
 #
 #     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     # print(missing_data)
+#     print(missing_data)
 #
 #     pd.set_option('display.width', 1000)
 #
@@ -299,7 +329,7 @@ print("--------------------------------TESTING--------------------------------")
 #     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
 #
 #     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     # print(missing_data)
+#     print(missing_data)
 #
 #     pd.set_option('display.width', 1000)
 #
@@ -312,14 +342,37 @@ print("--------------------------------TESTING--------------------------------")
 #     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
 #
 #     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     # print(missing_data)
+#     print(missing_data)
 #
-#     # print(stock_df.mean())
-#     # print(stock_df.median())
+#     print(stock_df.mean())
+#     print(stock_df.median())
 #     print(stock_df.describe())
 #
 #     print(stock_df.corr(method='pearson'))
 
+
+# def forecastError(numDays, stock_df, stockIn):
+#     model = trainModel(stockIn)
+#     n = int(numDays)
+#     currentDate = datetime.datetime.now()
+#     predDate = currentDate - datetime.timedelta(days=n)
+#     print(predDate.strftime('%Y-%m-%d'))
+#
+#     df = web.DataReader("TSLA", data_source='yahoo', start=predDate, end=currentDate)
+#     df = df.drop(['Open', 'High', 'Low', 'Adj Close', 'Volume'], axis=1)
+#     print("Actual")
+#     print(df)
+#
+#     index_future_dates = pd.date_range(start=predDate, end=currentDate)
+#     # print(index_future_dates)
+#
+#     pred = model.predict(start=len(stock_df), end=len(stock_df) + n, typ='levels').rename('Prediction')
+#     # pred.index = index_future_dates.strftime('%Y-%m-%d')
+#
+#     return pred
+
+# print("Prediction\n", forecastError(10, getDataframe("TSLA"), "TSLA"))
+# getPred(7, getDataframe("MSFT"), "MSFT")
 # getCSVS()
 # histogram()
 # densityPlot()
