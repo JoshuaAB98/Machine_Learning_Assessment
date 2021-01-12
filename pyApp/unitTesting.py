@@ -1,4 +1,3 @@
-
 import unittest
 from arimamodel import getPredGraph, getProfits, getDataframe, getCSVS, getPred, trainModel
 from functions import calcProfit

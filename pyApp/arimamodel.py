@@ -1,5 +1,3 @@
-# %%
-
 import pandas as pd
 import numpy as np
 import datetime
@@ -9,8 +7,8 @@ import csv
 from io import StringIO
 from bs4 import BeautifulSoup
 import requests
-# from pandas import set_option
-# from pandas.plotting import scatter_matrix
+from pandas import set_option
+from pandas.plotting import scatter_matrix
 from sklearn.model_selection import train_test_split
 from statsmodels.tsa.stattools import adfuller
 from pmdarima import auto_arima
@@ -56,7 +54,7 @@ def getCSVS():
     params = {
         'start': now,
         'interval': '1d',
-        'range': '1y',
+        'range': '4y',
         'events': 'history'
     }
 
@@ -111,7 +109,7 @@ def getDataframe(stockIn):
     return stock_df
 
 # getCSVS()
-getDataframe("TSLA")
+# getDataframe("TSLA")
 
 def trainModel(stockName):
     stock_df = getDataframe(stockName)
@@ -121,11 +119,11 @@ def trainModel(stockName):
     # stepwise_fit = auto_arima(stock_df, trace=True, suppress_warnings=True)
     # print(stepwise_fit.summary())
 
-    y_train, y_test = train_test_split(stock_df, test_size=0.2)
+    y_train, y_test = train_test_split(stock_df, test_size=0.3)
     print(y_train.shape)
     print(y_test.shape)
 
-    model = ARIMA(y_train['Close'], order=(1, 1, 0))
+    model = ARIMA(y_train['Close'], order=(3, 1, 3))
     model = model.fit()
     model.summary()
 
@@ -157,7 +155,7 @@ def trainModel(stockName):
 
     return model2
 
-# trainModel("MSFT")
+trainModel("MSFT")
 
 def getPred(numDays, stock_df, stockIn):
     model = trainModel(stockIn)
@@ -211,21 +209,25 @@ def getProfits(periodIn):
         if isinstance(df, pd.DataFrame) == False:
             try:
                 df = web.DataReader(c, data_source='yahoo', start=yest, end=yest)
+                df.dropna(inplace=True)
             except:
                 pass
         if isinstance(df, pd.DataFrame) == False:
             try:
                 df = web.DataReader(c, data_source='yahoo', start=yest1, end=yest1)
+                df.dropna(inplace=True)
             except:
                 pass
         if isinstance(df, pd.DataFrame) == False:
             try:
                 df = web.DataReader(c, data_source='yahoo', start=yest2, end=yest2)
+                df.dropna(inplace=True)
             except:
                 pass
         if isinstance(df, pd.DataFrame) == False:
             try:
                 df = web.DataReader(c, data_source='yahoo', start=yest3, end=yest3)
+                df.dropna(inplace=True)
             except:
                 pass
 
@@ -253,123 +255,123 @@ print("--------------------------------TESTING--------------------------------")
 # getProfits(30)
 
 
-# def histogram():
-#     stock = "MSFT"
-#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
-#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
-#
-#     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     print(missing_data)
-#
-#     pd.set_option('display.width', 1000)
-#     stock_df.hist()
-#     print("----- Length of Data frame -----")
-#     print(len(stock_df))
-#     plt.show()
-#
-# def densityPlot():
-#     stock = "MSFT"
-#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
-#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
-#
-#     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     print(missing_data)
-#
-#     pd.set_option('display.width', 1000)
-#     stock_df.plot(kind='density', subplots=True, layout=(3, 3), sharex=False)
-#     plt.show()
-#
-# def multiVariate():
-#     stock = "MSFT"
-#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
-#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
-#
-#     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     print(missing_data)
-#
-#     pd.set_option('display.width', 1000)
-#
-#     data_correlations = stock_df.corr()
-#
-#     corr_fig = plt.figure()
-#     axises = corr_fig.add_subplot(111)
-#     axcorr = axises.matshow(data_correlations, vmin=-1, vmax=1)
-#
-#     corr_fig.colorbar(axcorr)
-#     ticks = np.arange(0,6,1)
-#
-#     axises.set_xticks(ticks)
-#     axises.set_yticks(ticks)
-#     axises.set_xticklabels(header_names)
-#     axises.set_yticklabels(header_names)
-#
-#     plt.show()
-#
-# def scatterMatrix():
-#     stock = "MSFT"
-#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
-#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
-#
-#     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     print(missing_data)
-#
-#     pd.set_option('display.width', 1000)
-#
-#     print(header_names, stock_df)
-#
-#     set_option('display.width', 500)
-#     set_option('precision', 4)
-#
-#     scatter_matrix(stock_df)
-#     plt.show()
-#
-# def whiskerBox():
-#     stock = "MSFT"
-#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
-#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
-#
-#     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     print(missing_data)
-#
-#     pd.set_option('display.width', 1000)
-#
-#     stock_df.plot(kind='box', subplots=True, layout=(2,6), sharex = False)
-#     plt.show()
-#
-# def averages():
-#     stock = "MSFT"
-#     stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
-#     header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
-#
-#     missing_data = stock_df[stock_df.isna().any(axis=1)]
-#     print(missing_data)
-#
-#     print(stock_df.mean())
-#     print(stock_df.median())
-#     print(stock_df.describe())
-#
-#     print(stock_df.corr(method='pearson'))
+def histogram():
+    stock = "MSFT"
+    stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+    header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+
+    missing_data = stock_df[stock_df.isna().any(axis=1)]
+    print(missing_data)
+
+    pd.set_option('display.width', 1000)
+    stock_df.hist()
+    print("----- Length of Data frame -----")
+    print(len(stock_df))
+    plt.show()
+
+def densityPlot():
+    stock = "MSFT"
+    stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+    header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+
+    missing_data = stock_df[stock_df.isna().any(axis=1)]
+    print(missing_data)
+
+    pd.set_option('display.width', 1000)
+    stock_df.plot(kind='density', subplots=True, layout=(3, 3), sharex=False)
+    plt.show()
+
+def multiVariate():
+    stock = "MSFT"
+    stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+    header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+
+    missing_data = stock_df[stock_df.isna().any(axis=1)]
+    print(missing_data)
+
+    pd.set_option('display.width', 1000)
+
+    data_correlations = stock_df.corr()
+
+    corr_fig = plt.figure()
+    axises = corr_fig.add_subplot(111)
+    axcorr = axises.matshow(data_correlations, vmin=-1, vmax=1)
+
+    corr_fig.colorbar(axcorr)
+    ticks = np.arange(0,6,1)
+
+    axises.set_xticks(ticks)
+    axises.set_yticks(ticks)
+    axises.set_xticklabels(header_names)
+    axises.set_yticklabels(header_names)
+
+    plt.show()
+
+def scatterMatrix():
+    stock = "MSFT"
+    stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+    header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+
+    missing_data = stock_df[stock_df.isna().any(axis=1)]
+    print(missing_data)
+
+    pd.set_option('display.width', 1000)
+
+    print(header_names, stock_df)
+
+    set_option('display.width', 500)
+    set_option('precision', 4)
+
+    scatter_matrix(stock_df)
+    plt.show()
+
+def whiskerBox():
+    stock = "MSFT"
+    stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+    header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+
+    missing_data = stock_df[stock_df.isna().any(axis=1)]
+    print(missing_data)
+
+    pd.set_option('display.width', 1000)
+
+    stock_df.plot(kind='box', subplots=True, layout=(2,6), sharex = False)
+    plt.show()
+
+def averages():
+    stock = "MSFT"
+    stock_df = pd.read_csv('csvs/' + stock + ".csv", index_col='Date', parse_dates=True)
+    header_names = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+
+    missing_data = stock_df[stock_df.isna().any(axis=1)]
+    print(missing_data)
+
+    print(stock_df.mean())
+    print(stock_df.median())
+    print(stock_df.describe())
+
+    print(stock_df.corr(method='pearson'))
 
 
-# def forecastError(numDays, stock_df, stockIn):
-#     model = trainModel(stockIn)
-#     n = int(numDays)
-#     currentDate = datetime.datetime.now()
-#     predDate = currentDate - datetime.timedelta(days=n)
-#     print(predDate.strftime('%Y-%m-%d'))
-#
-#     df = web.DataReader("TSLA", data_source='yahoo', start=predDate, end=currentDate)
-#     df = df.drop(['Open', 'High', 'Low', 'Adj Close', 'Volume'], axis=1)
-#     print("Actual")
-#     print(df)
-#
-#     index_future_dates = pd.date_range(start=predDate, end=currentDate)
-#     # print(index_future_dates)
-#
-#     pred = model.predict(start=len(stock_df), end=len(stock_df) + n, typ='levels').rename('Prediction')
-#     # pred.index = index_future_dates.strftime('%Y-%m-%d')
-#
-#     return pred
+def forecastError(numDays, stock_df, stockIn):
+    model = trainModel(stockIn)
+    n = int(numDays)
+    currentDate = datetime.datetime.now()
+    predDate = currentDate - datetime.timedelta(days=n)
+    print(predDate.strftime('%Y-%m-%d'))
+
+    df = web.DataReader("TSLA", data_source='yahoo', start=predDate, end=currentDate)
+    df = df.drop(['Open', 'High', 'Low', 'Adj Close', 'Volume'], axis=1)
+    print("Actual")
+    print(df)
+
+    index_future_dates = pd.date_range(start=predDate, end=currentDate)
+    # print(index_future_dates)
+
+    pred = model.predict(start=len(stock_df), end=len(stock_df) + n, typ='levels').rename('Prediction')
+    # pred.index = index_future_dates.strftime('%Y-%m-%d')
+
+    return pred
 
 # print("Prediction\n", forecastError(10, getDataframe("TSLA"), "TSLA"))
 # getPred(7, getDataframe("MSFT"), "MSFT")

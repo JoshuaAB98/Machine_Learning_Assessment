@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from operator import itemgetter
-
 import pandas_datareader as web
 import matplotlib.pyplot as plt
 from arimamodel import getPredGraph, getProfits
@@ -38,7 +37,7 @@ def getCSVS():
     params = {
         'start': now,
         'interval': '1d',
-        'range': '1y',
+        'range': '4y',
         'events': 'history'
     }
 
@@ -54,7 +53,6 @@ def getCSVS():
 
             writer.writeheader()
             for row in reader:
-                # writer.writerow({'Date': datetime_to_float(datetime.strptime(row['Date'], "%Y-%m-%d")), 'Open': row['Open'], 'High': row['High'], 'Low': row['Low'], 'Close': row['Close'], 'Adj Close': row['Adj Close'], 'Volume': row['Volume']})
                 writer.writerow({'Date': row['Date'], 'Open': row['Open'], 'High': row['High'], 'Low': row['Low'],
                                  'Close': row['Close'], 'Adj Close': row['Adj Close'], 'Volume': row['Volume']})
 
@@ -105,7 +103,6 @@ def calcProfit(profitMargin, period):
         try:
             if profits[c][1] >= int(profitMargin):
                 aboveProfit[c] = profits[c][0]
-                # aboveProfit[c][1] = profits[c][1]
             else:
                 belowProfit[c] = profits[c][0]
                 print("\nBelow Profit")
@@ -113,7 +110,6 @@ def calcProfit(profitMargin, period):
         except:
             if profits[c] >= int(profitMargin):
                 aboveProfit[c] = profits[c]
-                # aboveProfit[c] = profits[c]
             else:
                 belowProfit[c] = profits[c]
                 print("\nBelow Profit")
